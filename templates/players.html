@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Players - Indian Cricket Team</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('dashboard') }}" class="brand">&#127951; Indian Cricket Team</a>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('matches') }}">Matches</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <div class="page-header">
+            <h2>&#127951; Indian Cricket Players</h2>
+            <div>
+                <input type="text" id="search-box" class="search-box" placeholder="Search by name or role..." onkeyup="filterPlayers()">
+            </div>
+        </div>
+
+        <table class="data-table" id="players-table">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Name <span class="sort-icon">&#8597;</span></th>
+                    <th onclick="sortTable(1)">Role <span class="sort-icon">&#8597;</span></th>
+                    <th onclick="sortTable(2)">Matches <span class="sort-icon">&#8597;</span></th>
+                    <th onclick="sortTable(3)">Runs <span class="sort-icon">&#8597;</span></th>
+                    <th onclick="sortTable(4)">Wickets <span class="sort-icon">&#8597;</span></th>
+                </tr>
+            </thead>
+            <tbody id="players-body">
+                {% for player in players %}
+                <tr class="player-row">
+                    <td>{{ player.name }}</td>
+                    <td>{{ player.role }}</td>
+                    <td>{{ player.matches }}</td>
+                    <td>{{ player.runs }}</td>
+                    <td>{{ player.wickets }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div id="no-results" class="no-results" style="display: none;">
+            No players found matching your search.
+        </div>
+
+        <div style="margin-top: 25px;">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline" id="back-btn">&#8592; Back to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        function filterPlayers() {
+            const query = document.getElementById('search-box').value.toLowerCase();
+            const rows = document.querySelectorAll('.player-row');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const name = row.cells[0].textContent.toLowerCase();
+                const role = row.cells[1].textContent.toLowerCase();
+                if (name.includes(query) || role.includes(query)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            document.getElementById('no-results').style.display = visibleCount === 0 ? 'block' : 'none';
+            document.getElementById('players-table').style.display = visibleCount === 0 ? 'none' : 'table';
+        }
+
+        let sortDirection = {};
+        function sortTable(colIndex) {
+            const table = document.getElementById('players-table');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            sortDirection[colIndex] = !sortDirection[colIndex];
+            const dir = sortDirection[colIndex] ? 1 : -1;
+
+            rows.sort((a, b) => {
+                let aVal = a.cells[colIndex].textContent.trim();
+                let bVal = b.cells[colIndex].textContent.trim();
+
+                // Numeric columns (Matches, Runs, Wickets)
+                if (colIndex >= 2) {
+                    return (parseInt(aVal) - parseInt(bVal)) * dir;
+                }
+                return aVal.localeCompare(bVal) * dir;
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+        }
+    </script>
+</body>
+</html>

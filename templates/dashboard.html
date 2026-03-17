@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Indian Cricket Team</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('dashboard') }}" class="brand">&#127951; Indian Cricket Team</a>
+        <div class="nav-links">
+            <a href="{{ url_for('players') }}">Players</a>
+            <a href="{{ url_for('matches') }}">Matches</a>
+            <a href="{{ url_for('logout') }}" id="logout-btn">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="welcome-banner">
+            <h2 id="welcome-message">Welcome, {{ username }}!</h2>
+            <p>Indian Cricket Team Management Portal</p>
+        </div>
+
+        <div class="nav-cards">
+            <a href="{{ url_for('players') }}" class="nav-card" id="view-players-btn">
+                <div class="icon">&#127951;</div>
+                <h3>View Players</h3>
+                <p>Browse team roster and stats</p>
+            </a>
+            <a href="{{ url_for('matches') }}" class="nav-card" id="view-matches-btn">
+                <div class="icon">&#127942;</div>
+                <h3>View Match Scores</h3>
+                <p>Recent match results</p>
+            </a>
+            <a href="#team-stats" class="nav-card" id="view-stats-btn">
+                <div class="icon">&#128202;</div>
+                <h3>View Team Stats</h3>
+                <p>Overall team performance</p>
+            </a>
+            <a href="{{ url_for('logout') }}" class="nav-card" id="logout-card-btn" style="border-top-color: #dc3545;">
+                <div class="icon">&#128682;</div>
+                <h3>Logout</h3>
+                <p>Sign out of portal</p>
+            </a>
+        </div>
+
+        <div id="team-stats">
+            <h2 style="color: #0033A0; margin-bottom: 15px;">Team Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="value">{{ stats.total_matches }}</div>
+                    <div class="label">Total Matches</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">{{ stats.wins }}</div>
+                    <div class="label">Wins</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">{{ stats.losses }}</div>
+                    <div class="label">Losses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">{{ stats.win_percentage }}</div>
+                    <div class="label">Win Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">#{{ stats.icc_ranking }}</div>
+                    <div class="label">ICC Ranking</div>
+                </div>
+                <div class="stat-card">
+                    <div class="value">{{ stats.captain }}</div>
+                    <div class="label">Captain</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

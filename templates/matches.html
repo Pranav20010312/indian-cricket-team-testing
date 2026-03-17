@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Scores - Indian Cricket Team</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('dashboard') }}" class="brand">&#127951; Indian Cricket Team</a>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('players') }}">Players</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <div class="page-header">
+            <h2>&#127942; Recent Match Results</h2>
+        </div>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" id="filter-all" onclick="filterMatches('all')">All Matches</button>
+            <button class="filter-btn win-btn" id="filter-wins" onclick="filterMatches('won')">Wins Only</button>
+            <button class="filter-btn loss-btn" id="filter-losses" onclick="filterMatches('lost')">Losses Only</button>
+        </div>
+
+        <div id="matches-container">
+            {% for match in matches %}
+            <div class="match-card {{ 'won' if match.result == 'Won' else 'lost' }}" data-result="{{ match.result.lower() }}">
+                <div class="match-info">
+                    <h3>India vs {{ match.opponent }}</h3>
+                    <p>&#128197; {{ match.date }} &nbsp; | &nbsp; &#127967; {{ match.venue }}</p>
+                    <p style="margin-top: 5px; color: #333;">{{ match.score }}</p>
+                </div>
+                <span class="match-result {{ 'won' if match.result == 'Won' else 'lost' }}">
+                    {{ match.result }}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="no-matches" class="no-results" style="display: none;">
+            No matches found for this filter.
+        </div>
+
+        <div style="margin-top: 25px;">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline" id="back-btn">&#8592; Back to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        function filterMatches(type) {
+            const cards = document.querySelectorAll('.match-card');
+            let visibleCount = 0;
+
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('filter-' + (type === 'won' ? 'wins' : type === 'lost' ? 'losses' : 'all')).classList.add('active');
+
+            cards.forEach(card => {
+                if (type === 'all' || card.dataset.result === type) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('no-matches').style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+flask
+selenium
+pytest
+pytest-html
+requests
+beautifulsoup4
+anthropic
+python-docx
